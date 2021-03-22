@@ -113,14 +113,20 @@
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque blanditiis, exercitationem architecto accusamus quis repellendus magni nam ipsam id qui non itaque eos, consectetur maiores aperiam sapiente. Libero, possimus minus.                                  
                                     </div>
                                 </div>
-                                
-                                <div class="card">
+                                <?php 
+                                    if(isset($_COOKIE['_uid_']) || isset($_COOKIE['_uiid_']) || isset($_SESSION['login'])) { ?>
+                                        <div class="card">
                                     <div class="card-header">Add Comment</div>
                                     <div class="card-body">
                                         <textarea placeholder="Type here..." class="form-control mb-2" rows="4"></textarea>
                                         <button class="btn btn-primary btn-sm mr-2">Post Comment</button>
                                     </div>
                                 </div>
+                                   <?php } else {
+                                    echo "<a href='./backend/signin.php'>Sign in to comment</a>";
+                                   }
+                                ?>
+                                
                             </div>
                             <!--end comment section end-->
                         </div>
