@@ -118,8 +118,26 @@
                                         <div class="card">
                                     <div class="card-header">Add Comment</div>
                                     <div class="card-body">
-                                        <textarea placeholder="Type here..." class="form-control mb-2" rows="4"></textarea>
-                                        <button class="btn btn-primary btn-sm mr-2">Post Comment</button>
+                                        <?php 
+                                            if(isset($_POST['submit'])) {
+                                                        $comments = trim($_POST['comments']);
+                                                        $sql = "INSERT INTO comments (com_post_id, com_detail, com_user_id, com_user_name, com_date, com_status) VALUES (:post_id, :com_detail, :user_id, :user_name, :com_date, :com_status)";
+                                                        $stmt = $pdo->prepare($sql);
+                                                        $stmt->execute([
+                                                            ':post_id' => $_GET['post_id'],
+                                                            ':com_detail' => $comments,
+                                                            ':user_id' => base64_decode($_COOKIE['_uid_']),
+                                                            ':user_name' => 'User name',
+                                                            ':com_date' => date("M n, Y") . ' at ' . date("h:i A"),
+                                                            ':com_status' => 'unapproved'
+                                                        ]);
+                                                    }
+                                        ?>
+                                        <form action = "single.php?post_id=<?php echo $_GET['post_id']; ?>" method="POST">
+                                            <textarea name = "comments"placeholder="Type here..." class="form-control mb-2" rows="4"></textarea>
+                                            <button type = "submit" name = "submit" class="btn btn-primary btn-sm mr-2">Post Comment</button>
+                                        </form>
+                                        
                                     </div>
                                 </div>
                                    <?php } else {
