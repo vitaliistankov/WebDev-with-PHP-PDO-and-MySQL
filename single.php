@@ -123,11 +123,21 @@
                                                         $comments = trim($_POST['comments']);
                                                         $sql = "INSERT INTO comments (com_post_id, com_detail, com_user_id, com_user_name, com_date, com_status) VALUES (:post_id, :com_detail, :user_id, :user_name, :com_date, :com_status)";
                                                         $stmt = $pdo->prepare($sql);
+
+                                                        
+                                                        $sql2 = "SELECT * FROM users WHERE user_id = :id";
+                                                        $stmt2 = $pdo->prepare($sql2);
+                                                        $stmt2->execute([
+                                                            ':id' => base64_decode($_COOKIE['_uid_'])
+                                                        ]);
+                                                        $result = $stmt2->fetch(PDO::FETCH_ASSOC);
+                                                        $user_name = $result['user_name'];    
+
                                                         $stmt->execute([
                                                             ':post_id' => $_GET['post_id'],
                                                             ':com_detail' => $comments,
                                                             ':user_id' => base64_decode($_COOKIE['_uid_']),
-                                                            ':user_name' => 'User name',
+                                                            ':user_name' => $user_name,
                                                             ':com_date' => date("M n, Y") . ' at ' . date("h:i A"),
                                                             ':com_status' => 'unapproved'
                                                         ]);
