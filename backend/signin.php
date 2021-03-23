@@ -60,6 +60,8 @@
                                                     setcookie('_uiid_', $d_user_nickname, time() + 60 * 60 * 24, '/', '', '', true);
                                                 }
                                                 $_SESSION['user_name'] = $user_name;
+                                                $_SESSION['user_id'] = $user['user_id'];
+                                                $_SESSION['user_nickname'] = $user['user_nickname'];
                                                 $_SESSION['user_role'] = $user_role;
                                                 $_SESSION['login'] = 'success';
                                                 header("Refresh:2;url=../index.php");

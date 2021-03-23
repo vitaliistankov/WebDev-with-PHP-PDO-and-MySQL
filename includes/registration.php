@@ -19,8 +19,8 @@
     }
 
     if(isset($_SESSION['login'])) {
-    $user_id = base64_decode($_COOKIE['_uid_']);
-            $user_nickname = base64_decode($_COOKIE['_uiid_']);
+            $user_id = $_SESSION['user_id'];
+            $user_nickname = $_SESSION['user_nickname'];
             $sql = "SELECT * FROM users WHERE user_id = :id AND user_nickname = :nickname";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
