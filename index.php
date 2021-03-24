@@ -245,6 +245,8 @@
                                         $category_id = $categories['category_id'];
                                         $category_title = $categories['category_name'];
                                         $total_posts = $categories['category_total_posts'];
+                                        if ($total_posts > 0) {
+ 
                                         ?>
                                         <div class="col-lg-4 col-md-6 mb-5">
                                             <a class="card card-link border-top border-top-lg border-primary h-100 lift" href="categories.php?category_id=<?php echo $category_id; ?>&category_name=<?php echo $category_title; ?>"
@@ -255,7 +257,7 @@
                                                 <div class="card-footer bg-transparent pt-0 pb-5"><div class="badge badge-pill badge-light font-weight-normal px-3 py-2"><?php echo $total_posts; ?> Posts</div></div></a
                                             >
                                         </div>
-                                    <?php }
+                                    <?php }}
                                 ?>
 
                             </div>
