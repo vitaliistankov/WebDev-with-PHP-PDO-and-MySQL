@@ -124,7 +124,8 @@
                                     </div>
                                 </div>
                             </a>
-                            <?php 
+                            
+                            <?php
                                 $sql = "SELECT * FROM posts WHERE post_status = :status";
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute([
@@ -145,7 +146,6 @@
                                 }
                                 $total_pager = ceil($post_count / $post_per_page);
                             ?>
-
                             <h1>Recent posting:</h1>
                             <hr />
                             <div class="row">
@@ -192,16 +192,26 @@
 
                             </div>
 
-                            <?php 
+                            <?php
                                 if ($post_count > $post_per_page) { ?>
                                     <nav aria-label="Page navigation example">
                                         <ul class="pagination pagination-blog justify-content-center">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#!" aria-label="Previous"><span aria-hidden="true">&#xAB;</span></a>
-                                            </li>
+                                            <?php 
+                                                if(isset($_GET['page'])) {
+                                                    $prev = $_GET['page'] - 1;
+                                                } else {
+                                                    $prev = 0;
+                                                }
+
+                                                if($prev+1 <= 1) {
+                                                    echo '<li class="page-item disabled"><a class="page-link" href="#!" aria-label="Previous"><span aria-hidden="true">&#xAB;</span></a></li>';
+                                                } else {
+                                                    echo '<li class="page-item"><a class="page-link" href="index.php?page='. $prev .'" aria-label="Previous"><span aria-hidden="true">&#xAB;</span></a></li>';
+                                                }
+                                            ?>
 
                                             <?php 
-                                            if (isset($_GET['page'])) {
+                                                if (isset($_GET['page'])) {
                                                     $active = $_GET['page'];
                                                 } else {
                                                     $active = 1;
@@ -215,15 +225,25 @@
                                                     
                                                 }
                                             ?>
+
+                                            <?php 
+                                                if(isset($_GET['page'])) {
+                                                    $next = $_GET['page'] + 1;
+                                                } else {
+                                                    $next = 2;
+                                                }
+
+                                                if($next - 1 >= $total_pager) {
+                                                    echo '<li class="page-item disabled"><a class="page-link" href="#!" aria-label="Next"><span aria-hidden="true">&#xBB;</span></a></li>';
+                                                } else {
+                                                    echo '<li class="page-item"><a class="page-link" href="index.php?page=' . $next . '" aria-label="Next"><span aria-hidden="true">&#xBB;</span></a></li>';
+                                                }
+                                            ?>
                                             
                                         </ul>
-                            </nav>
-
+                                    </nav>
                                 <?php }
                             ?>
-
-                            
-
 
                             <h1 class="pt-5">Most viewed posts:</h1>
                             <hr />
@@ -283,8 +303,7 @@
                                         $category_id = $categories['category_id'];
                                         $category_title = $categories['category_name'];
                                         $total_posts = $categories['category_total_posts'];
-                                        if ($total_posts > 0) {
- 
+                                        if($total_posts > 0) {
                                         ?>
                                         <div class="col-lg-4 col-md-6 mb-5">
                                             <a class="card card-link border-top border-top-lg border-primary h-100 lift" href="categories.php?category_id=<?php echo $category_id; ?>&category_name=<?php echo $category_title; ?>"
