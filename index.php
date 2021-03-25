@@ -124,12 +124,33 @@
                                     </div>
                                 </div>
                             </a>
+                            <?php 
+                                $sql = "SELECT * FROM posts WHERE post_status = :status";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([
+                                    ':status' => 'Published'
+                                ]);
+                                $post_count = $stmt->rowCount();
+                                $post_per_page = 3;
+                                if (isset($_GET['page'])) {
+                                    $page = $_GET['page'];
+                                    if($page == 1) {
+                                        $page_id = 0;
+                                    } else {
+                                        $page_id = ($page * $post_per_page) - $post_per_page;
+                                    }
+                                } else {
+                                    $page = 1;
+                                    $page_id = 0;
+                                }
+                                $total_pager = ceil($post_count / $post_per_page);
+                            ?>
 
                             <h1>Recent posting:</h1>
                             <hr />
                             <div class="row">
                                 <?php
-                                    $sql = "SELECT * FROM posts WHERE post_status = :status ORDER BY post_id DESC LIMIT 0, 6";
+                                    $sql = "SELECT * FROM posts WHERE post_status = :status ORDER BY post_id DESC LIMIT $page_id, $post_per_page";
                                     $stmt = $pdo->prepare($sql);
                                     $stmt->execute([
                                         ':status' => 'Published'
