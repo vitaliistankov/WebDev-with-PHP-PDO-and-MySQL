@@ -121,11 +121,34 @@
                                 </div>
                             </a>
 
+                            <?php
+                                $sql = "SELECT * FROM posts WHERE post_status = :status AND post_category_id = :id";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([
+                                    ':status' => 'Published',
+                                    ':id' => $_GET['category_id']
+                                ]);
+                                $post_count = $stmt->rowCount();
+                                $post_per_page = 3;
+                                if (isset($_GET['page'])) {
+                                    $page = $_GET['page'];
+                                    if($page == 1) {
+                                        $page_id = 0;
+                                    } else {
+                                        $page_id = ($page * $post_per_page) - $post_per_page;
+                                    }
+                                } else {
+                                    $page = 1;
+                                    $page_id = 0;
+                                }
+                                $total_pager = ceil($post_count / $post_per_page);
+                            ?>
+
                             <h1>Recent posting:</h1>
                             <hr />
                             <div class="row">
                                 <?php
-                                    $sql = "SELECT * FROM posts WHERE post_status = :status AND post_category_id = :id ORDER BY post_id DESC LIMIT 0, 6";
+                                    $sql = "SELECT * FROM posts WHERE post_status = :status AND post_category_id = :id ORDER BY post_id DESC LIMIT $page_id, $post_per_page";
                                     $stmt = $pdo->prepare($sql);
                                     $stmt->execute([
                                         ':status' => 'Published',
@@ -167,20 +190,58 @@
                                 ?>
                             </div>
 
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination pagination-blog justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#!" aria-label="Previous"><span aria-hidden="true">&#xAB;</span></a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#!">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#!">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#!">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#!">12</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#!" aria-label="Next"><span aria-hidden="true">&#xBB;</span></a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <?php
+                                if ($post_count > $post_per_page) { ?>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination pagination-blog justify-content-center">
+                                            <?php 
+                                                if(isset($_GET['page'])) {
+                                                    $prev = $_GET['page'] - 1;
+                                                } else {
+                                                    $prev = 0;
+                                                }
+
+                                                if($prev+1 <= 1) {
+                                                    echo '<li class="page-item disabled"><a class="page-link" href="#!" aria-label="Previous"><span aria-hidden="true">&#xAB;</span></a></li>';
+                                                } else {
+                                                    echo '<li class="page-item"><a class="page-link" href="categories.php?category_id='.$_GET['category_id'].'&category_name='. $_GET['category_name'] .'&page='. $prev .'" aria-label="Previous"><span aria-hidden="true">&#xAB;</span></a></li>';
+                                                }
+                                            ?>
+
+                                            <?php 
+                                                if (isset($_GET['page'])) {
+                                                    $active = $_GET['page'];
+                                                } else {
+                                                    $active = 1;
+                                                }
+                                                for ($i = 1; $i <= $total_pager; $i++) {
+                                                    if ($i == $active) {
+                                                        echo '<li class="page-item active"><a class="page-link" href="categories.php?category_id='.$_GET['category_id'].'&category_name='.$_GET['category_name'].'&page='. $i .'">' . $i . '</a></li>';
+                                                    } else {
+                                                        echo '<li class="page-item"><a class="page-link" href="categories.php?category_id='.$_GET['category_id'].'&category_name='.$_GET['category_name'].'&page='. $i .'">' . $i . '</a></li>';
+                                                    }
+                                                    
+                                                }
+                                            ?>
+
+                                            <?php 
+                                                if(isset($_GET['page'])) {
+                                                    $next = $_GET['page'] + 1;
+                                                } else {
+                                                    $next = 2;
+                                                }
+
+                                                if($next - 1 >= $total_pager) {
+                                                    echo '<li class="page-item disabled"><a class="page-link" href="#!" aria-label="Next"><span aria-hidden="true">&#xBB;</span></a></li>';
+                                                } else {
+                                                    echo '<li class="page-item"><a class="page-link" href="categories.php?category_id='.$_GET['category_id'].'&category_name='.$_GET['category_name'].'&page=' . $next . '" aria-label="Next"><span aria-hidden="true">&#xBB;</span></a></li>';
+                                                }
+                                            ?>
+                                            
+                                        </ul>
+                                    </nav>
+                                <?php }
+                            ?>
 
 
                             <h1 class="pt-5">Most viewed posts:</h1>
