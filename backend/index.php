@@ -118,58 +118,10 @@
         <!--Side Nav-->
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-                <nav class="sidenav shadow-right sidenav-light">
-                    <div class="sidenav-menu">
-                        <div class="nav accordion" id="accordionSidenav">
-                            <a class="nav-link collapsed pt-4" href="index.html">
-                                <div class="nav-link-icon"><i data-feather="activity"></i></div>
-                                Dashboard
-                            </a>
-                            <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts"><div class="nav-link-icon"><i data-feather="layout"></i></div>
-                                Posts
-                                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseLayouts" data-parent="#accordionSidenav">
-                                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavLayout">
-                                    <a class="nav-link" href="all-post.html">All Posts</a>
-                                    <a class="nav-link" href="add-new.html">Add New Post</a>
-                                </nav>
-                            </div>
-
-                            <a class="nav-link" href="categories.html" ><div class="nav-link-icon"><i data-feather="chevrons-up"></i></div>
-                                Categories
-                            </a>
-
-                            <a class="nav-link" href="pages.html" ><div class="nav-link-icon"><i data-feather="book-open"></i></div>
-                                Pages
-                            </a>
-
-                            <a class="nav-link" href="users.html" ><div class="nav-link-icon"><i data-feather="users"></i></div>
-                                Users
-                            </a>
-
-                            <a class="nav-link" href="comments.html" ><div class="nav-link-icon"><i data-feather="package"></i></div>
-                                Comments
-                            </a>
-
-                            <a class="nav-link" href="messages.html" ><div class="nav-link-icon"><i data-feather="mail"></i></div>
-                                Messages
-                            </a>
-
-                            <a class="nav-link" href="profile.html" ><div class="nav-link-icon"><i data-feather="user"></i></div>
-                                Profile
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="sidenav-footer">
-                        <div class="sidenav-footer-content">
-                            <div class="sidenav-footer-subtitle">Logged in as:</div>
-                            <div class="sidenav-footer-title">Md. A. Barik</div>
-                        </div>
-                    </div>
-
-                </nav>
+                <?php 
+                    $curr_page = basename(__FILE__);
+                    require_once("./includes/left-sidebar.php");
+                ?>
             </div>
 
 
@@ -195,10 +147,16 @@
                             <div class="card bg-primary text-white mb-4">
                                 <div class="card-body d-flex align-items-center justify-content-between">
                                     <p>All Posts</p>
-                                    <p>32</p>
+                                    <?php 
+                                        $sql = "SELECT * FROM posts WHERE post_status = :status";
+                                        $stmt = $pdo->prepare($sql);
+                                        $stmt->execute([':status' => 'Published']);
+                                        $post_count = $stmt->rowCount();
+                                    ?>
+                                    <p><?php echo $post_count; ?></p>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <a class="small text-white stretched-link" href="all-post.php">View Details</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -207,10 +165,16 @@
                             <div class="card bg-warning text-white mb-4">
                                 <div class="card-body d-flex align-items-center justify-content-between">
                                     <p>Comments</p>
-                                    <p>32</p>
+                                    <?php 
+                                        $sql = "SELECT * FROM comments";
+                                        $stmt = $pdo->prepare($sql);
+                                        $stmt->execute();
+                                        $comment_count = $stmt->rowCount();
+                                    ?>
+                                    <p><?php echo $comment_count; ?></p>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <a class="small text-white stretched-link" href="comments.php">View Details</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -219,10 +183,16 @@
                             <div class="card bg-success text-white mb-4">
                                 <div class="card-body d-flex align-items-center justify-content-between">
                                     <p>Categories</p>
-                                    <p>32</p>
+                                    <?php 
+                                        $sql = "SELECT * FROM categories";
+                                        $stmt = $pdo->prepare($sql);
+                                        $stmt->execute();
+                                        $category_count = $stmt->rowCount();
+                                    ?>
+                                    <p><?php echo $category_count; ?></p>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <a class="small text-white stretched-link" href="categories.php">View Details</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -230,11 +200,17 @@
                         <div class="col-xl-3 col-md-6">
                             <div class="card bg-danger text-white mb-4">
                                 <div class="card-body d-flex align-items-center justify-content-between">
-                                    <p>Pages</p>
-                                    <p>32</p>
+                                    <p>Users</p>
+                                    <?php 
+                                        $sql = "SELECT * FROM users";
+                                        $stmt = $pdo->prepare($sql);
+                                        $stmt->execute();
+                                        $user_count = $stmt->rowCount();
+                                    ?>
+                                    <p><?php echo $user_count; ?></p>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">View Details</a>
+                                    <a class="small text-white stretched-link" href="users.php">View Details</a>
                                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
