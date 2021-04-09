@@ -259,45 +259,42 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>
-                                                    <a href="#">
-                                                        I Love You!
-                                                    </a>
-                                                </td>
-                                                <td>Love</td>
-                                                <td>61</td>
-                                                <td>Photo</td>
-                                                <td>MD. A. Barik</td>
-                                                <td>17 Nov 20</td>
-                                            </tr>     
-                                            <tr>
-                                                <td>2</td>
-                                                <td>
-                                                    <a href="#">
-                                                        I Love You!
-                                                    </a>
-                                                </td>
-                                                <td>Love</td>
-                                                <td>61</td>
-                                                <td>Photo</td>
-                                                <td>MD. A. Barik</td>
-                                                <td>17 Nov 20</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>
-                                                    <a href="#">
-                                                        I Love You!
-                                                    </a>
-                                                </td>
-                                                <td>Love</td>
-                                                <td>61</td>
-                                                <td>Photo</td>
-                                                <td>MD. A. Barik</td>
-                                                <td>17 Nov 20</td>
-                                            </tr>     
+                                            <?php 
+                                                $sql = "SELECT * FROM posts WHERE post_status = :status ORDER BY post_views DESC LIMIT 0, 5";
+                                                $stmt = $pdo->prepare($sql);
+                                                $stmt->execute([
+                                                    ':status' => 'Published'
+                                                ]);
+                                                while($posts = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                    // post_id, post_title, post_views, post_image, post_date, post_author, post_category_id, category_name
+                                                    $post_id = $posts['post_id'];
+                                                    $post_title = $posts['post_title'];
+                                                    $post_views = $posts['post_views'];
+                                                    $post_image = $posts['post_image'];
+                                                    $post_date = $posts['post_date'];
+                                                    $post_author = $posts['post_author'];
+                                                    $post_category_id = $posts['post_category_id'];
+                                                    $sql1 = "SELECT * FROM categories WHERE category_id = :id";
+                                                    $stmt1 = $pdo->prepare($sql1);
+                                                    $stmt1->execute([':id'=>$post_category_id]);
+                                                    $category = $stmt1->fetch(PDO::FETCH_ASSOC);
+                                                    $category_title = $category['category_name']; ?>
+                                                        <tr>
+                                                            <td><?php echo $post_id; ?></td>
+                                                            <td>
+                                                                <a href="../single.php?post_id=<?php echo $post_id; ?>" target="_blank">
+                                                                    <?php echo $post_title; ?>
+                                                                </a>
+                                                            </td>
+                                                            <td><?php echo $category_title; ?></td>
+                                                            <td><?php echo $post_views; ?></td>
+                                                            <td><img src="../img/<?php echo $post_image; ?>" height="50" width="50"></td>
+                                                            <td><?php echo $post_author; ?></td>
+                                                            <td><?php echo $post_date; ?></td>
+                                                        </tr> 
+                                                <?php }
+                                            ?>
+                                                 
                                         </tbody>
                                     </table>
                                 </div>
