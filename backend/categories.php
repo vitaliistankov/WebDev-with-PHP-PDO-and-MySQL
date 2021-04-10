@@ -86,7 +86,10 @@
                                                             
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
+                                                            <form action="edit-category.php" method="POST">
+                                                                <input type="hidden" name="edit-id" value="<?php echo $category_id ?>" />
+                                                                <button name="edit" type="submit" class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
+                                                            </form>
                                                         </td>
                                                         <td>
                                                             <?php 

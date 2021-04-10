@@ -21,30 +21,62 @@
                             <div class="page-header-content">
                                 <h1 class="page-header-title">
                                     <div class="page-header-icon"><i data-feather="edit-3"></i></div>
-                                    <span>Create New Category</span>
+                                    <span>Update Category</span>
                                 </h1>
                             </div>
                         </div>
                     </div>
 
+                    <?php 
+                        if(isset($_POST['edit'])) {
+                            $id = $_POST['edit-id'];
+                            $url = "http://localhost/techbarik/backend/edit-category.php?id=".$id;
+                            header("Location: {$url}");
+                        }
+                    ?>
+
                     <!--Start Table-->
                     <div class="container-fluid mt-n10">
                         <div class="card mb-4">
-                            <div class="card-header">Create New Category</div>
+                            <div class="card-header">Update Category</div>
+                            <?php 
+                                $sql = "SELECT * FROM categories WHERE category_id = :id";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([
+                                    ':id' => $_GET['id']
+                                ]);
+                                $categories = $stmt->fetch(PDO::FETCH_ASSOC);
+                                $category_title = $categories['category_name'];
+                                $category_status = $categories['category_status']; 
+                            ?>
                             <div class="card-body">
-                                <form>
+                                <?php 
+                                    if(isset($_POST['update-category'])) {
+                                        $cat_title = trim($_POST['category-title']);
+                                        $category_status = $_POST['category-status'];
+                                        $sql = "UPDATE categories SET category_name = :title, category_status = :status WHERE category_id = :id";
+                                        $stmt = $pdo->prepare($sql);
+                                        $stmt->execute([
+                                            ':title' => $cat_title,
+                                            ':status' => $category_status,
+                                            ':id' => $_GET['id']
+                                        ]);
+                                        header("Location: categories.php");
+                                    }
+                                ?>
+                                <form action="edit-category.php?id=<?php echo $_GET['id']; ?>" method="POST">
                                     <div class="form-group">
-                                        <label for="post-title">Category Name:</label>
-                                        <input class="form-control" id="post-title" type="text" placeholder="Category Name..." />
+                                        <label for="cat-title">Category Name:</label>
+                                        <input value="<?php echo $category_title; ?>" name="category-title" class="form-control" id="cat-title" type="text" placeholder="Category Name..." />
                                     </div>
                                     <div class="form-group">
-                                        <label for="post-status">Status:</label>
-                                        <select class="form-control" id="post-status">
-                                            <option>Published</option>
-                                            <option>Draft</option>
+                                        <label for="cat-status">Status:</label>
+                                        <select name="category-status" class="form-control" id="cat-status">
+                                            <option value="Published" <?php echo $category_status=='Published'?'selected':'';  ?>>Published</option>
+                                            <option value="Draft" <?php echo $category_status=='Draft'?'selected':'';  ?>>Draft</option>
                                         </select>
                                     </div>
-                                    <button class="btn btn-primary mr-2 my-1" type="button">Submit now</button>
+                                    <button name="update-category" class="btn btn-primary mr-2 my-1" type="submit">Submit now</button>
                                 </form>
                             </div>
                         </div>

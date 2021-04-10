@@ -27,7 +27,7 @@
             </div>
 
             <?php 
-                if($curr_page == 'new-category.php' || $curr_page == 'categories.php') { ?>
+                if($curr_page == 'new-category.php' || $curr_page == 'categories.php' || $curr_page == 'edit-category.php') { ?>
                     <a class="nav-link active" href="categories.php" ><div class="nav-link-icon"><i data-feather="chevrons-up"></i></div>
                         Categories
                     </a>
