@@ -22,7 +22,7 @@
                                     <div class="page-header-icon"><i data-feather="chevrons-up"></i></div>
                                     <span>Categories</span>
                                 </h1>
-                                <a href="new-category.html" title="Add new category" class="btn btn-white">
+                                <a href="new-category.php" title="Add new category" class="btn btn-white">
                                     <div class="page-header-icon"><i data-feather="plus"></i></div>
                                 </a>
                             </div>
@@ -41,7 +41,6 @@
                                                 <th>ID</th>
                                                 <th>Category Name</th>
                                                 <th>Total Posts</th>
-                                                <th>Post Views</th>
                                                 <th>Created By</th>
                                                 <th>Status</th>
                                                 <th>Edit</th>
@@ -49,69 +48,72 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>
-                                                    <a href="#">
-                                                        Lifestyle
-                                                    </a>
-                                                </td>
-                                                <td>20</td>
-                                                <td>61</td>
-                                                <td>Md. A. Barik</td>
-                                                <td>
-                                                    <div class="badge badge-success">Published
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>     
-                                            <tr>
-                                                <td>2</td>
-                                                <td>
-                                                    <a href="#">
-                                                        Loved
-                                                    </a>
-                                                </td>
-                                                <td>20</td>
-                                                <td>61</td>
-                                                <td>Md. A. Barik</td>
-                                                <td>
-                                                    <div class="badge badge-success">Published
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>
-                                                    <a href="#">
-                                                        Programming
-                                                    </a>
-                                                </td>
-                                                <td>20</td>
-                                                <td>61</td>
-                                                <td>Md. A. Barik</td>
-                                                <td>
-                                                    <div class="badge badge-success">Published
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>     
+                                            <?php 
+                                                $sql = "SELECT * FROM categories";
+                                                $stmt = $pdo->prepare($sql);
+                                                $stmt->execute();
+                                                while($categories = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                    // category_id, category_name, category_total_posts, category_status, created_by
+                                                    $category_id = $categories['category_id'];
+                                                    $category_name = $categories['category_name'];
+                                                    $category_total_posts = $categories['category_total_posts'];
+                                                    $category_status = $categories['category_status'];
+                                                    $created_by = $categories['created_by']; ?>
+                                                    <tr>
+                                                        <td><?php echo $category_id; ?></td>
+                                                        <td>
+                                                            <?php 
+                                                                if($category_total_posts == 0) { ?>
+                                                                    <?php echo $category_name; ?>
+                                                               <?php } else { ?>
+                                                                    <a href="../categories.php?category_id=<?php echo $category_id; ?>&category_name=<?php echo $category_name; ?>" target="_blank">
+                                                                        <?php echo $category_name; ?>
+                                                                    </a>
+                                                              <?php }
+                                                            ?>
+                                                            
+                                                        </td>
+                                                        <td><?php echo $category_total_posts; ?></td>
+                                                        <td><?php echo $created_by; ?></td>
+                                                        <td>
+                                                            <?php 
+                                                                if($category_status == 'Published') { ?>
+                                                                    <div class="badge badge-success"><?php echo $category_status; ?></div>
+                                                               <?php } else { ?>
+                                                                    <div class="badge badge-warning"><?php echo $category_status; ?></div>
+                                                               <?php }
+                                                            ?>
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
+                                                        </td>
+                                                        <td>
+                                                            <?php 
+                                                                if (isset($_POST['delete-category'])) {
+                                                                    $sql = "DELETE FROM categories WHERE category_id = :id";
+                                                                    $stmt = $pdo->prepare($sql);
+                                                                    $stmt->execute([
+                                                                        ':id' => $_POST['id']
+                                                                    ]);
+                                                                    header("Location: categories.php");
+                                                                }
+                                                            ?>
+                                                            <?php 
+                                                                if($category_total_posts == 0) { ?>
+                                                                    <form action="categories.php" method="POST">
+                                                                        <input type="hidden" name="id" value="<?php echo $category_id; ?>" />
+                                                                        <button name="delete-category" class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
+                                                                    </form>  
+                                                                <?php } else { ?>
+                                                                    <button title="You can't delete category having a post!" name="delete-category" class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
+                                                                <?php }
+                                                            ?>
+                                                               
+                                                        </td>
+                                                    </tr>
+                                                <?php }
+                                            ?>   
                                         </tbody>
                                     </table>
                                 </div>
