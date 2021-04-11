@@ -44,70 +44,133 @@
                                                 <th>Date</th>
                                                 <th>Status</th>
                                                 <th>Approve</th>
-                                                <th>Decline</th>
+                                                <th>Unapprove</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>
-                                                    Md. A. Barik
-                                                </td>
-                                                <td>
-                                                    mdabarik19@gmail.com
-                                                </td>
-                                                <td>
-                                                    <a href="#">
-                                                        Post Title
-                                                    </a>
-                                                </td>
-                                                <td>Details</td>
-                                                <td>17 Nov 2020</td>
-                                                <td>
-                                                    <div class="badge badge-success">
-                                                        Approved
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-success btn-icon"><i data-feather="check"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="delete"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>  
-                                            <tr>
-                                                <td>2</td>
-                                                <td>
-                                                    Md. A. Barik
-                                                </td>
-                                                <td>
-                                                    mdabarik19@gmail.com
-                                                </td>
-                                                <td>
-                                                    <a href="#">
-                                                        Post Title
-                                                    </a>
-                                                </td>
-                                                <td>Details</td>
-                                                <td>17 Nov 2020</td>
-                                                <td>
-                                                    <div class="badge badge-success">Approved
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-success btn-icon"><i data-feather="check"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="delete"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>                     
+                                            <?php 
+                                                $sql = "SELECT * FROM comments";
+                                                $stmt = $pdo->prepare($sql);
+                                                $stmt->execute();
+                                                while($comments = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                    // com_id, com_detail, com_date, com_status, 
+                                                    // com_user_id, user_name, user_email, com_post_id, post_title
+                                                    $com_id = $comments['com_id'];
+                                                    $com_detail = $comments['com_detail'];
+                                                    $com_date = $comments['com_date'];
+                                                    $com_status = $comments['com_status'];
+                                                    $com_user_id = $comments['com_user_id'];
+                                                    // getting user_name and user_email from users table
+                                                    $sql1 = "SELECT * FROM users WHERE user_id = :id";
+                                                    $stmt1 = $pdo->prepare($sql1);
+                                                    $stmt1->execute([
+                                                        ':id' => $com_user_id
+                                                    ]);
+                                                    $user = $stmt1->fetch(PDO::FETCH_ASSOC);
+                                                    $user_name = $user['user_name'];
+                                                    $user_email = $user['user_email'];
+
+                                                    $com_post_id = $comments['com_post_id'];
+                                                    // post_id and post_title from posts table
+                                                    $sql2 = "SELECT * FROM posts WHERE post_id = :id";
+                                                    $stmt2 = $pdo->prepare($sql2);
+                                                    $stmt2->execute([
+                                                        ':id' => $com_post_id
+                                                    ]);
+                                                    $post = $stmt2->fetch(PDO::FETCH_ASSOC);
+                                                    $post_id = $post['post_id'];
+                                                    $post_title = $post['post_title']; ?>
+                                                        <tr>
+                                                            <td><?php echo $com_id; ?></td>
+                                                            <td>
+                                                                <?php echo $user_name; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo $user_email; ?>
+                                                            </td>
+                                                            <td>
+                                                                <a href="../single.php?post_id=<?php echo $post_id; ?>" target="_blank">
+                                                                    <?php echo $post_title; ?>
+                                                                </a>
+                                                            </td>
+                                                            <td><?php echo $com_detail; ?></td>
+                                                            <td><?php echo $com_date; ?></td>
+                                                            <td>
+                                                                <div class="badge badge-<?php echo $com_status=="approved"?"success":"danger"; ?>">
+                                                                    <?php echo $com_status; ?>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <?php 
+                                                                    if(isset($_POST['approve'])) {
+                                                                        $comment_id = $_POST['com_id'];
+                                                                        $sql = "UPDATE comments SET com_status = :status WHERE com_id = :id";
+                                                                        $stmt = $pdo->prepare($sql);
+                                                                        $stmt->execute([
+                                                                            ':status' => 'approved',
+                                                                            ':id' => $comment_id
+                                                                        ]);
+                                                                        header("Location: comments.php");
+                                                                    }
+                                                                ?>
+                                                                <?php 
+                                                                    if($com_status == 'approved') { ?>
+                                                                        <button title="Sorry, the status already approved!" class="btn btn-success btn-icon"><i data-feather="check"></i></button>
+                                                                    <?php } else { ?>
+                                                                        <form action="comments.php" method="POST">
+                                                                            <input type="hidden" name="com_id" value="<?php echo $com_id; ?>" />
+                                                                            <button name="approve" type="submit" class="btn btn-success btn-icon"><i data-feather="check"></i></button>
+                                                                        </form>
+                                                                    <?php }
+                                                                ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php 
+                                                                    if(isset($_POST['unapprove'])) {
+                                                                        $comment_id = $_POST['com_id'];
+                                                                        $sql = "UPDATE comments SET com_status = :status WHERE com_id = :id";
+                                                                        $stmt = $pdo->prepare($sql);
+                                                                        $stmt->execute([
+                                                                            ':status' => 'unapproved',
+                                                                            ':id' => $comment_id
+                                                                        ]);
+                                                                        header("Location: comments.php");
+                                                                    }
+                                                                ?>
+                                                                <?php 
+                                                                    if($com_status == 'unapproved') { ?>
+                                                                        <button title="Sorry, it's already unapproved!" name="unapprove" class="btn btn-red btn-icon"><i data-feather="delete"></i></button>
+                                                                    <?php } else { ?>
+                                                                        <form action="comments.php" method="POST">
+                                                                            <input type="hidden" name="com_id" value="<?php echo $com_id; ?>" />
+                                                                            <button name="unapprove" class="btn btn-red btn-icon"><i data-feather="delete"></i></button>
+                                                                        </form>
+                                                                   <?php }
+                                                                ?>
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <?php 
+                                                                    if(isset($_POST['delete'])) {
+                                                                        $comment_id = $_POST['com_id'];
+                                                                        $sql = "DELETE FROM comments WHERE com_id = :id";
+                                                                        $stmt = $pdo->prepare($sql);
+                                                                        $stmt->execute([
+                                                                            ':id' => $comment_id
+                                                                        ]);
+                                                                        header("Location: comments.php");
+                                                                    }
+                                                                ?>
+                                                                <form action="comments.php" method="POST" >
+                                                                    <input type="hidden" name="com_id" value="<?php echo $com_id; ?>" />
+                                                                    <button name="delete" type="submit" class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>    
+                                                <?php }
+                                            ?>
+                                                            
                                         </tbody>
                                     </table>
                                 </div>

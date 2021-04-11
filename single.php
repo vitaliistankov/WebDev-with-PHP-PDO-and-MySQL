@@ -101,11 +101,10 @@
                                     <h2 class="mb-0">Comments</h2>
                                 </div>
                                 <hr class="mb-4" />
-                                 <?php 
-                                    $sql = "SELECT * FROM comments WHERE com_status = :status AND com_post_id = :id";
+                                <?php 
+                                    $sql = "SELECT * FROM comments WHERE com_post_id = :id";
                                     $stmt = $pdo->prepare($sql);
                                     $stmt->execute([
-                                        ':status' => 'approved',
                                         ':id' => $_GET['post_id']
                                     ]);
                                     $count = $stmt->rowCount();
@@ -116,7 +115,7 @@
                                         $stmt1 = $pdo->prepare($sql1);
                                         $stmt1->execute([
                                             ':id' => $_GET['post_id']
-                                            ]);
+                                        ]);
                                         while($comments = $stmt1->fetch(PDO::FETCH_ASSOC)) {
                                             $user_name = $comments['com_user_name'];
                                             $com_date = $comments['com_date'];
@@ -160,31 +159,38 @@
                                             <?php }
                                             ?>
 
-
-
+                                            
 
                                         <?php }
                                     }
-                                    ?>
+                                ?>
                                 
                                 <?php 
                                     if(isset($_COOKIE['_uid_']) || isset($_COOKIE['_uiid_']) || isset($_SESSION['login'])) { ?>
                                         <div class="card">
-                                    <div class="card-header">Add Comment</div>
-                                    <div class="card-body">
-                                        <?php 
-                                            if(isset($_POST['submit'])) {
+                                            <div class="card-header">Add Comment</div>
+                                            <div class="card-body">
+                                                <?php 
+                                                    if(isset($_POST['submit'])) {
                                                         $comments = trim($_POST['comments']);
                                                         $sql = "INSERT INTO comments (com_post_id, com_detail, com_user_id, com_user_name, com_date, com_status) VALUES (:post_id, :com_detail, :user_id, :user_name, :com_date, :com_status)";
                                                         $stmt = $pdo->prepare($sql);
-                                                        
+
+                                                        if(isset($_SESSION['user_id'])) {
+                                                            $signed_in_user_id = $_SESSION['user_id'];
+                                                        } else if(isset($_COOKIE['_uid_'])) {
+                                                            $signed_in_user_id = base64_decode($_COOKIE['_uid_']);
+                                                        } else  {
+                                                            $signed_in_user_id = -1;
+                                                        }
+
                                                         $sql2 = "SELECT * FROM users WHERE user_id = :id";
                                                         $stmt2 = $pdo->prepare($sql2);
                                                         $stmt2->execute([
                                                             ':id' => $signed_in_user_id
                                                         ]);
                                                         $result = $stmt2->fetch(PDO::FETCH_ASSOC);
-                                                        $user_name = $result['user_name'];    
+                                                        $user_name = $result['user_name'];
 
                                                         $stmt->execute([
                                                             ':post_id' => $_GET['post_id'],
@@ -196,19 +202,19 @@
                                                         ]);
                                                         header("Location: single.php?post_id={$_GET['post_id']}");
                                                     }
-                                        ?>
-                                        <form action = "single.php?post_id=<?php echo $_GET['post_id']; ?>" method="POST">
-                                            <textarea name = "comments"placeholder="Type here..." class="form-control mb-2" rows="4"></textarea>
-                                            <button type = "submit" name = "submit" class="btn btn-primary btn-sm mr-2">Post Comment</button>
-                                        </form>
-                                        
-                                    </div>
-                                </div>
+                                                ?>
+                                                <form action="single.php?post_id=<?php echo $_GET['post_id']; ?>" method="POST">
+                                                    <textarea name="comments" placeholder="Type here..." class="form-control mb-2" rows="4"></textarea>
+                                                    <button type="submit" name="submit" class="btn btn-primary btn-sm mr-2">Post Comment</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                    <?php } else {
-                                    echo "<a href='./backend/signin.php'>Sign in to comment</a>";
+                                        echo "<a href='./backend/signin.php'>Sign in to comment</a>";
                                    }
                                 ?>
                                 
+
                             </div>
                             <!--end comment section end-->
                         </div>
