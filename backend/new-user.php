@@ -3,7 +3,6 @@
     <body class="nav-fixed">
         <?php require_once('./includes/top-navbar.php'); ?>
         
-
         <!--Side Nav-->
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
@@ -12,7 +11,6 @@
                     require_once("./includes/left-sidebar.php");
                 ?>
             </div>
-
 
             <div id="layoutSidenav_content">
                 <main>
@@ -27,32 +25,46 @@
                         </div>
                     </div>
 
+                    <?php
+                        if(isset($_POST['create'])) {
+                            echo "You have cliked on create now button!";
+                        }
+                    ?>
+
                     <!--Start Table-->
                     <div class="container-fluid mt-n10">
                         <div class="card mb-4">
                             <div class="card-header">Create New User</div>
                             <div class="card-body">
-                                <form>
+                                <form action="new-user.php" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="user-name">User Name:</label>
-                                        <input class="form-control" id="user-name" type="text" placeholder="User Name..." />
+                                        <input name="user-name" class="form-control" id="user-name" type="text" placeholder="User Name..." />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nickname">Nick Name:</label>
+                                        <input name="nick-name" class="form-control" id="nickname" type="text" placeholder="Nick Name..." />
                                     </div>
                                     <div class="form-group">
                                         <label for="user-email">User Email:</label>
-                                        <input class="form-control" id="user-email" type="email" placeholder="User Email..." />
+                                        <input name="user-email" class="form-control" id="user-email" type="email" placeholder="User Email..." />
                                     </div>
                                     <div class="form-group">
-                                        <label for="user-role">Role:</label>
-                                        <select class="form-control" id="user-role">
-                                            <option>Admin</option>
-                                            <option>Subscriber</option>
+                                        <label for="password">User Password:</label>
+                                        <input name="user-password" class="form-control" id="password" type="password" placeholder="Enter password..." />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user-role">User Role:</label>
+                                        <select name="user-role" class="form-control" id="user-role">
+                                            <option value="admin">Admin</option>
+                                            <option value="subscriber">Subscriber</option>
                                         </select>
                                         <div class="form-group">
                                         <label for="post-title">Choose photo:</label>
-                                        <input class="form-control" id="post-title" type="file" />
+                                        <input name="user-photo" class="form-control" id="post-title" type="file" />
                                     </div>
                                     </div>
-                                    <button class="btn btn-primary mr-2 my-1" type="button">Create now!</button>
+                                    <button name="create" class="btn btn-primary mr-2 my-1" type="submit">Create now!</button>
                                 </form>
                             </div>
                         </div>
