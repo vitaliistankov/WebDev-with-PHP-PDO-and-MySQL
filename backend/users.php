@@ -1,8 +1,7 @@
 <?php require_once('./includes/header.php'); ?>
 
     <body class="nav-fixed">
-        <?php require_once('./includes/top-navbar.php'); ?>
-        
+        <?php require_once('./includes/top-navbar.php'); ?>        
 
         <!--Side Nav-->
         <div id="layoutSidenav">
@@ -12,7 +11,6 @@
                     require_once("./includes/left-sidebar.php");
                 ?>
             </div>
-
 
             <div id="layoutSidenav_content">
                 <main>
@@ -49,50 +47,44 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>
-                                                    Md. A. Barik
-                                                </td>
-                                                <td>
-                                                    mdabarik19@gmail.com
-                                                </td>
-                                                <td>Photo</td>
-                                                <td>17 Nov 2020</td>
-                                                <td>
-                                                    <div class="badge badge-success">
-                                                        Subscriber
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-icon"><i data-feather="edit"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>  
-                                            <tr>
-                                                <td>2</td>
-                                                <td>
-                                                    Md. A. Barik
-                                                </td>
-                                                <td>
-                                                    mdabarik19@gmail.com
-                                                </td>
-                                                <td>Photo</td>
-                                                <td>17 Nov 2020</td>
-                                                <td>
-                                                    <div class="badge badge-success">
-                                                        Subscriber
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-icon"><i data-feather="edit"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                                </td>
-                                            </tr>                     
+                                            <?php 
+                                                $sql = "SELECT * FROM users";
+                                                $stmt = $pdo->prepare($sql);
+                                                $stmt->execute(); 
+                                                while($users = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+                                                    $user_id = $users['user_id'];
+                                                    $user_name = $users['user_name'];
+                                                    $user_email = $users['user_email'];
+                                                    $user_photo = $users['user_photo'];
+                                                    $registered_on = $users['registered_on'];
+                                                    $user_role = $users['user_role'];
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $user_id; ?></td>
+                                                        <td>
+                                                            <?php echo $user_name; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo $user_email; ?>
+                                                        </td>
+                                                        <td>
+                                                            <img src="./assets/img/<?php echo $user_photo; ?>" width="50" height="50" />
+                                                        </td>
+                                                        <td><?php echo $registered_on; ?></td>
+                                                        <td>
+                                                            <div class="badge badge-<?php echo $user_role=="admin"?"red":"success"; ?>">
+                                                                <?php echo $user_role; ?>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-primary btn-icon"><i data-feather="edit"></i></button>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
+                                                        </td>
+                                                    </tr> 
+                                               <?php }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
