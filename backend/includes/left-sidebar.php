@@ -64,7 +64,23 @@
     <div class="sidenav-footer">
         <div class="sidenav-footer-content">
             <div class="sidenav-footer-subtitle">Logged in as:</div>
-            <div class="sidenav-footer-title">Md. A. Barik</div>
+            <?php 
+                if(isset($_COOKIE['_uid_'])) {
+                    $user_id = base64_decode($_COOKIE['_uid_']);
+                } else if(isset($_SESSION['user_id'])) {
+                    $user_id = $_SESSION['user_id'];
+                } else {
+                    $user_id = -1;
+                }
+                $sql = "SELECT * FROM users WHERE user_id = :id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ':id' => $user_id
+                ]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                $user_name = $user['user_name'];
+            ?>
+            <div class="sidenav-footer-title"><?php echo $user_name; ?></div>
         </div>
     </div>
 
