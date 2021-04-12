@@ -61,7 +61,7 @@
                                 $user_role = $_POST['user-role'];
                                 $user_photo = $_FILES['user-photo']['name'];
                                 $user_photo_tmp = $_FILES['user-photo']['tmp_name'];
-                                move_uploaded_file("{$user_photo}", "./assets/img/{$user_photo_tmp}");
+                                move_uploaded_file("{$user_photo_tmp}", "./assets/img/{$user_photo}");
                                 
                                 if(empty($user_photo)) {
                                     $sql1 = "SELECT * FROM users WHERE user_id = :id";
