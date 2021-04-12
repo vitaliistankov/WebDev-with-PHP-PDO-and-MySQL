@@ -71,6 +71,18 @@
                                         </tfoot>
                                         <tbody>
                                             <?php 
+                                                if(isset($_POST['delete-post'])) {
+                                                    $post_id = $_POST['post-id'];
+                                                    $sql = "DELETE FROM posts WHERE post_id = :id";
+                                                    $stmt = $pdo->prepare($sql);
+                                                    $stmt->execute([
+                                                        ':id' => $post_id
+                                                    ]);
+                                                    header("Location: all-post.php");
+                                                }
+                                            ?>
+
+                                            <?php 
                                                 $sql = "SELECT * FROM posts";
                                                 $stmt = $pdo->prepare($sql);
                                                 $stmt->execute();
@@ -120,7 +132,10 @@
                                                             <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
+                                                            <form action="all-post.php" method="POST">
+                                                                <input type="hidden" name="post-id" value="<?php echo $post_id; ?>" />
+                                                                <button name="delete-post" type="submit" class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
+                                                            </form>
                                                         </td>
                                                     </tr>
                                                <?php }
