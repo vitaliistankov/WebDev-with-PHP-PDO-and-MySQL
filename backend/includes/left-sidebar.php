@@ -43,9 +43,18 @@
                 Pages
             </a>
 
-            <a class="nav-link" href="users.php" ><div class="nav-link-icon"><i data-feather="users"></i></div>
-                Users
-            </a>
+            <?php 
+                if($curr_page == 'user-update.php' || $curr_page == 'new-user.php' || $curr_page == 'users.php') { ?>
+                    <a class="nav-link active" href="users.php" ><div class="nav-link-icon"><i data-feather="users"></i></div>
+                        Users
+                    </a>
+                <?php } else { ?>
+                    <a class="nav-link" href="users.php" ><div class="nav-link-icon"><i data-feather="users"></i></div>
+                        Users
+                    </a>
+                <?php }
+            ?>
+            
 
             <a class="nav-link" href="comments.php" ><div class="nav-link-icon"><i data-feather="package"></i></div>
                 Comments

@@ -27,7 +27,49 @@
 
                     <?php
                         if(isset($_POST['create'])) {
-                            echo "You have cliked on create now button!";
+                            $user_name = trim($_POST['user-name']);
+                            $user_nickname = trim($_POST['nick-name']);
+                            // nickname exist
+                            $sql1 = "SELECT * FROM users WHERE user_nickname = :nickname";
+                            $stmt1 = $pdo->prepare($sql1);
+                            $stmt1->execute([':nickname' => $user_nickname]);
+                            $nickname_count = $stmt1->rowCount();
+                            if($nickname_count >= 1) {
+                                $err_nickname = "Nickname already exist!";
+                            }
+                            $user_email = trim($_POST['user-email']);
+                            // email exist
+                            $sql2 = "SELECT * FROM users WHERE user_email = :email";
+                            $stmt2 = $pdo->prepare($sql2);
+                            $stmt2->execute([':email'=>$user_email]);
+                            $email_count = $stmt2->rowCount();
+                            if($email_count >= 1) {
+                                $err_email = "Email already exist!";
+                            }
+
+                            if(!isset($err_nickname) || !isset($err_email)) {
+                                $user_password = trim($_POST['user-password']);
+                                $hash = password_hash($user_password, PASSWORD_BCRYPT, ['cost'=>10]);
+                                $user_role = $_POST['user-role'];
+                                $user_photo = $_FILES['user-photo']['name'];
+                                $user_photo_temp = $_FILES['user-photo']['tmp_name'];
+                                move_uploaded_file("{$user_photo_temp}", "./assests/img/{$user_photo}");
+
+
+                                $sql = "INSERT INTO users (user_name, user_nickname, user_email, user_password, user_photo, registered_on, user_role) VALUES (:username, :nickname, :email, :password, :photo, :date, :role)";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([
+                                    ':username' => $user_name,
+                                    ':nickname' => $user_nickname,
+                                    ':email' => $user_email,
+                                    ':password' => $user_password,
+                                    ':photo' => $user_photo,
+                                    ':date' => date("M n, Y") . ' at ' . date("h:i A"),
+                                    ':role' => $user_role
+                                ]);
+                                header("Location: users.php");
+                            }
+                            
                         }
                     ?>
 
@@ -37,6 +79,13 @@
                             <div class="card-header">Create New User</div>
                             <div class="card-body">
                                 <form action="new-user.php" method="POST" enctype="multipart/form-data">
+                                    <?php 
+                                        if(isset($err_email)) {
+                                            echo "<p class='alert alert-danger'>{$err_email}</p>";
+                                        } else if(isset($err_nickname)) {
+                                            echo "<p class='alert alert-danger'>{$err_nickname}</p>";
+                                        }
+                                    ?>
                                     <div class="form-group">
                                         <label for="user-name">User Name:</label>
                                         <input name="user-name" class="form-control" id="user-name" type="text" placeholder="User Name..." />
@@ -60,8 +109,8 @@
                                             <option value="subscriber">Subscriber</option>
                                         </select>
                                         <div class="form-group">
-                                        <label for="post-title">Choose photo:</label>
-                                        <input name="user-photo" class="form-control" id="post-title" type="file" />
+                                        <label for="user-photo">Choose photo:</label>
+                                        <input name="user-photo" class="form-control" id="user-photo" type="file" />
                                     </div>
                                     </div>
                                     <button name="create" class="btn btn-primary mr-2 my-1" type="submit">Create now!</button>
