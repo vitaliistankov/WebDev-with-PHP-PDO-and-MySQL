@@ -53,11 +53,6 @@
                     </a>
                <?php }
             ?>
-            
-
-            <a class="nav-link" href="pages.php" ><div class="nav-link-icon"><i data-feather="book-open"></i></div>
-                Pages
-            </a>
 
             <?php 
                 if($curr_page == 'user-update.php' || $curr_page == 'new-user.php' || $curr_page == 'users.php') { ?>

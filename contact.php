@@ -45,15 +45,65 @@
                     </header>
                     <section class="bg-white py-10">
                         <div class="container">
+
+                            <?php 
+                                if(isset($_COOKIE['_uid_']) || isset($_COOKIE['_uiid_']) || isset($_SESSION['login'])) { ?>
+                                    <form action="contact.php" method="POST">
+                                        <?php 
+                                            if(isset($_COOKIE['_uid_'])) {
+                                                $user_id = base64_decode($_COOKIE['_uid_']);
+                                            } else if(isset($_SESSION['user_id'])) {
+                                                $user_id = $_SESSION['user_id'];
+                                            } else {
+                                                $user_id = -1;
+                                            }
+                                            $sql = "SELECT * FROM users WHERE user_id = :id";
+                                            $stmt = $pdo->prepare($sql);
+                                            $stmt->execute([
+                                                ':id' => $user_id
+                                            ]);
+                                            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                                            $user_name = $user['user_name'];
+                                            $user_email = $user['user_email'];
+
+                                            if(isset($_POST['send'])) {
+                                                $message = trim($_POST['message']);
+                                                $sql = "INSERT INTO messages SET ms_username = :username, ms_useremail = :email, ms_detail = :detail, ms_date = :date";
+                                                $stmt = $pdo->prepare($sql);
+                                                $stmt->execute([
+                                                    ':username' => $user_name,
+                                                    ':email' => $user_email,
+                                                    ':detail' => $message,
+                                                    ':date' => date("M n, Y") . ' at ' . date("h:i A")
+                                                ]);
+                                                echo "<p class='alert alert-success'>Message has been send successfully!</p>";
+                                            }
+                                        ?>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label class="text-dark" for="inputName">Full name</label>
+                                                <input value="<?php echo $user_name; ?>" readonly="true" class="form-control py-4" id="inputName" type="text" placeholder="Full name" />
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label class="text-dark" for="inputEmail">Email</label>
+                                                <input value="<?php echo $user_email; ?>" readonly="true" class="form-control py-4" id="inputEmail" type="email" placeholder="name@example.com" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="inputMessage">Message</label>
+                                            <textarea name="message" class="form-control py-3" id="inputMessage" type="text" placeholder="Enter your message..." rows="4"></textarea>
+                                        </div>
+                                        <div class="text-center">
+                                            <button name="send" class="btn btn-primary btn-marketing mt-4" type="submit">Submit Request</button>
+                                        </div>
+                                    </form>
+                               <?php } else { ?>
+                                    <a href="./backend/sign-in.php">Sign in to contact us!</a>
+                               <?php }
+                            ?>
                             
-                            <form>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6"><label class="text-dark" for="inputName">Full name</label><input class="form-control py-4" id="inputName" type="text" placeholder="Full name" /></div>
-                                    <div class="form-group col-md-6"><label class="text-dark" for="inputEmail">Email</label><input class="form-control py-4" id="inputEmail" type="email" placeholder="name@example.com" /></div>
-                                </div>
-                                <div class="form-group"><label class="text-dark" for="inputMessage">Message</label><textarea class="form-control py-3" id="inputMessage" type="text" placeholder="Enter your message..." rows="4"></textarea></div>
-                                <div class="text-center"><button class="btn btn-primary btn-marketing mt-4" type="submit">Submit Request</button></div>
-                            </form>
+                            
+                            
 
                         </div>
 
