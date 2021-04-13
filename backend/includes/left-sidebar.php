@@ -16,7 +16,7 @@
             ?>
             
             <?php 
-                if($curr_page == 'all-posts.php' || $curr_page == 'new-page.php') { ?>
+                if($curr_page == "all-posts.php" || $curr_page == 'new-page.php') { ?>
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="true" aria-controls="collapseLayouts"><div class="nav-link-icon"><i data-feather="layout"></i></div>
                         Posts
                         <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -71,9 +71,18 @@
                 Comments
             </a>
 
-            <a class="nav-link" href="messages.php" ><div class="nav-link-icon"><i data-feather="mail"></i></div>
-                Messages
-            </a>
+            <?php 
+                if($curr_page == 'messages.php' || $curr_page == 'reply.php') { ?>
+                    <a class="nav-link active" href="messages.php" ><div class="nav-link-icon"><i data-feather="mail"></i></div>
+                        Messages
+                    </a>
+               <?php } else { ?>
+                    <a class="nav-link" href="messages.php" ><div class="nav-link-icon"><i data-feather="mail"></i></div>
+                        Messages
+                    </a>
+              <?php }
+            ?>
+            
 
             <a class="nav-link" href="profile.php" ><div class="nav-link-icon"><i data-feather="user"></i></div>
                 Profile
