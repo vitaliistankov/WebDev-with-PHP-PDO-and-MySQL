@@ -97,12 +97,40 @@
                                             <button name="send" class="btn btn-primary btn-marketing mt-4" type="submit">Submit Request</button>
                                         </div>
                                     </form>
+
+
+
+                                    <table class="table table-bordered table-hover mt-5" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Your messages:</th>
+                                                <th>Answers:</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
+                                                $sql1 = "SELECT * FROM messages WHERE ms_useremail = :email";
+                                                $stmt1 = $pdo->prepare($sql1);
+                                                $stmt1->execute([
+                                                    ':email' => $user_email
+                                                ]);
+                                                while($ms = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                                                    $ms_detail = $ms['ms_detail'];
+                                                    $reply = $ms['reply']; ?>
+                                                    <tr>
+                                                      <td><?php echo $ms_detail; ?></td>
+                                                      <td><?php echo $reply; ?></td>
+                                                  </tr>
+                                                <?php }                                                  
+                                            ?>
+                                        </tbody>
+                                    </table>
+
+
                                <?php } else { ?>
                                     <a href="./backend/sign-in.php">Sign in to contact us!</a>
                                <?php }
                             ?>
-                            
-                            
                             
 
                         </div>
@@ -130,4 +158,4 @@
             </div>
         </div>
 
-<?php require_once("./includes/footer.php"); ?>  
+<?php require_once("./includes/footer.php"); ?>
