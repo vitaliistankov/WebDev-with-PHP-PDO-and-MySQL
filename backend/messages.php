@@ -66,7 +66,7 @@
                                                                 <?php echo $ms_useremail; ?>
                                                             </td>
                                                             <td><?php echo $ms_detail; ?></td>
-                                                            <td>17 Nov 2020</td>
+                                                            <td>10 May 2021</td>
                                                             <td>
                                                                 <div class="badge badge-<?php echo $ms_status=="pending"?"warning":"success"; ?>">
                                                                     <?php echo $ms_status; ?>

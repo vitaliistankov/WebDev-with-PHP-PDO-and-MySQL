@@ -34,7 +34,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-lg-8">
                                         <h1 class="page-header-title mb-3">Contact Us</h1>
-                                        <p class="page-header-text">We will back to you in a week!</p>
+                                        <p class="page-header-text">We will back to you soon!</p>
                                     </div>
                                 </div>
                             </div>

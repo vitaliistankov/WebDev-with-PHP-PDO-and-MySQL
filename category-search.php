@@ -61,8 +61,6 @@
                             <div class="container text-center">
                                 <div class="row justify-content-center">
                                     <div class="col-lg-8">
-                                        <h1 class="page-header-title mb-3">Search result for <?php echo $keyword; ?></h1>
-                                        <p class="page-header-text">Total posts found: <?php echo $post_found; ?></p>
                                     </div>
                                 </div>
                             </div>

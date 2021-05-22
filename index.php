@@ -7,7 +7,7 @@
 
                     <nav class="navbar navbar-marketing navbar-expand-lg bg-white  navbar-light">
                         <div class="container">
-                            <a class="navbar-brand text-dark" href="index.php">Your Informational Web Site</a>
+                            <a class="navbar-brand text-dark" href="index.php">Ремонт ASIC оборудования</a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                 <img src="img/menu.png" style="height:20px;width:25px" /><i data-feather="menu"></i>
                             </button>
@@ -39,7 +39,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-xl-8 col-lg-10 text-center">
 
-                                        <h1 class="page-header-title">Welcome to Your Informational Web Site</h1>
+                                        <h1 class="page-header-title">Сервисный центр по ремонту ASIC</h1>
                                         <p class="page-header-text mb-5">Are you searching for some content that you haven't found yet? Try searching in the search box below!</p>
                                         <form class="page-header-signup mb-2 mb-md-0" action="search.php" method="POST">
                                             <div class="form-row justify-content-center">

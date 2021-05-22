@@ -40,7 +40,7 @@
                             if($countNickname != 0) {
                                 $error_nickname_exist = "Nick name already exist!";
                             };
-
+                            $city = trim($_POST['user-city']);
                             $email = trim($_POST['email-address']);
                             // email already exist
                             $sql1 = "SELECT * FROM users WHERE user_email = :email";
@@ -58,17 +58,18 @@
                             if($password != $confirm_password) {
                                 $error = "Password doesn't match";
                             } else {
-                                date_default_timezone_set('asia/dhaka');
+                                date_default_timezone_set('Europe/Sofia');
                                 $hash = password_hash($password, PASSWORD_BCRYPT, ['cost'=>10]);
-                                $sql = "INSERT INTO users (user_name, user_nickname, user_email, user_password, user_photo, registered_on) VALUES (:name, :nickname, :email, :password, :photo, :date)";
+                                $sql = "INSERT INTO users (user_name, user_nickname, user_city, user_email, user_password, user_photo, registered_on) VALUES (:name, :nickname, :city, :email, :password, :photo, :date)";
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute([
                                     ':name' => $full_name,
                                     ':nickname' => $nick_name,
+                                    ':city' => $city,
                                     ':email' => $email,
                                     ':password' => $hash,
                                     ':photo' => 'default-logo.png',
-                                    ':date' => date("M n, Y") . ' at ' . date("h:i A")
+                                    ':date' => date("M d, Y") . ' at ' . date("h:i A")
                                 ]);
                                 $success = true;
                             }
@@ -112,6 +113,9 @@
                                             </div>
                                             <div class="form-group"><label class="small mb-1" for="userNickname">Nick Name</label>
                                                 <input name="nick-name" class="form-control py-4" id="userNickname" type="text" placeholder="Enter nick name" required="true" />
+                                            </div>
+                                            <div class="form-group"><label class="small mb-1" for="userCity">City</label>
+                                                <input name="user-city" class="form-control py-4" id="userCity" type="text" placeholder="Enter your city" required="true" />
                                             </div>
                                             <div class="form-group"><label class="small mb-1" for="inputEmailAddress">Email</label>
                                                 <input name="email-address" class="form-control py-4" id="inputEmailAddress" type="email" aria-describedby="emailHelp" placeholder="Enter email address" required="true" />
